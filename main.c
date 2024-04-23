@@ -3,6 +3,7 @@
 void populateButtonArray(JUEGO *juego, GtkWidget *parent);
 GtkWidget *makeButton(JUEGO *juego, int index);
 void buttonCallback(GtkButton *button, gpointer data);
+void onExit(GtkWidget *window, gpointer data);
 
 int main(gint argc, gchar *argv[]) {
   GtkWidget *window;
@@ -18,6 +19,7 @@ int main(gint argc, gchar *argv[]) {
   verticalbox = gtk_vbox_new(TRUE,5);
   populateButtonArray(&juego, verticalbox);
 
+  gtk_signal_connect(GTK_OBJECT(window),"destroy",GTK_SIGNAL_FUNC(onExit),NULL);
   gtk_container_add(GTK_CONTAINER(window), verticalbox);
   gtk_widget_show_all(window);
 
@@ -43,10 +45,10 @@ void populateButtonArray(JUEGO *juego, GtkWidget *parent) {
 GtkWidget *makeButton(JUEGO *juego, int index) {
   GtkWidget *button;
   GSTRUCT *buttonData;
-  char buffer[2];
+  char buffer[5];
   // making label text
   buffer[1] = 0;
-  sprintf(buffer, "%d", index);
+  sprintf(buffer, "id:%d", index);
 
   buttonData = (GSTRUCT *) juego->gstructArr[index];
   buttonData->juego = juego;
@@ -62,3 +64,6 @@ void buttonCallback(GtkButton *button, gpointer data) {
   g_print("id: %d\n", ((GSTRUCT *) data)->id);
 }
    
+void onExit(GtkWidget *window, gpointer data) {
+    gtk_main_quit();
+}
