@@ -3,9 +3,11 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 
+/**
+ * La ficha de cada jugador se infiere de su índice.
+ */
 typedef struct def_jugador {
   char nombre[256];
-  char pieza;
   char esCPU;
 } JUGADOR;
 
@@ -25,7 +27,7 @@ typedef struct def_juego {
   char **tablero;
   ESTADO *inicio;
   JUGADOR jugadores[2];
-  int juadorActual;
+  int jugadorActual;
 } JUEGO;
 
 /**
