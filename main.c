@@ -24,7 +24,7 @@ int main(gint argc, gchar *argv[]) {
   verticalbox = gtk_vbox_new(TRUE,5);
   populateButtonArray(&juego, verticalbox);
 
-  // empties juego.gstructArr
+  // frees everything in callback
   gtk_signal_connect(GTK_OBJECT(window),"destroy",GTK_SIGNAL_FUNC(onExit),&juego);
   gtk_container_add(GTK_CONTAINER(window), verticalbox);
   gtk_widget_show_all(window);
@@ -58,10 +58,6 @@ void populateButtonArray(JUEGO *juego, GtkWidget *parent) {
 GtkWidget *makeButton(JUEGO *juego, int index) {
   GtkWidget *button;
   GSTRUCT *buttonData;
-  /* char buffer[5]; */
-  /* // making label text */
-  /* buffer[1] = 0; */
-  /* sprintf(buffer, "id:%d", index); */
 
   buttonData = (GSTRUCT *) juego->gstructArr[index];
   buttonData->juego = juego;
@@ -73,12 +69,22 @@ GtkWidget *makeButton(JUEGO *juego, int index) {
   return button;
 }
 
+/**
+ *
+ */
 void buttonCallback(GtkButton *button, gpointer data) {
   GSTRUCT *buttonData;
+  char labelBuffer[2];
 
   buttonData = (GSTRUCT *) data;
-  g_print("id: %d\n", buttonData->id);
+  labelBuffer[1] = 0;
 
+  if (buttonData->juego->tablero[ buttonData->id ] == ' ') {
+    buttonData->juego->tablero[ buttonData->id ] = getPiece(buttonData->juego->jugadorActual);
+    labelBuffer[0] = getPiece(buttonData->juego->jugadorActual);
+    gtk_button_set_label(GTK_BUTTON(button), labelBuffer);
+  }
+  g_print("id: %d, val: %c\n", buttonData->id, buttonData->juego->tablero[ buttonData->id ]);
 }
    
 /**
@@ -97,9 +103,8 @@ void initJuego(JUEGO *juego) {
     juego->gstructArr[i] = (void *) malloc(sizeof(GSTRUCT));
   }
 
-  juego->tablero = (char**) malloc(sizeof(char *) * 3);
-  for (i = 0; i < 3; i++) {
-    juego->tablero[i] = (char*) malloc(sizeof(char) * 3);
+  for (i = 0; i < 9; i++) {
+    juego->tablero[i] = ' ';
   }
 
   juego->inicio = NULL;
@@ -123,12 +128,6 @@ void onExit(GtkWidget *window, gpointer data) {
   for (i = 0; i < 9; i++) {
     free(juego->gstructArr[i]);
   }
-
-  for (i = 0; i < 3; i++) {
-    free(juego->tablero[i]);
-  }
-
-  free(juego->tablero);
 
   gtk_main_quit();
 }

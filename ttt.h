@@ -24,7 +24,7 @@ typedef struct def_estado {
 typedef struct def_juego {
   GtkWidget *botones[9];
   void *gstructArr[9];
-  char **tablero;
+  char tablero[9];
   ESTADO *inicio;
   JUGADOR jugadores[2];
   int jugadorActual;
