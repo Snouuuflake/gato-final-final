@@ -22,6 +22,7 @@ int main(gint argc, gchar *argv[]) {
   gtk_container_border_width(GTK_CONTAINER(window),5);
 
   verticalbox = gtk_vbox_new(TRUE,5);
+
   populateButtonArray(&juego, verticalbox);
 
   // frees everything in callback
