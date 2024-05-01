@@ -356,7 +356,23 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
     // TODO: move the vairables up
     if (buttondata->juego->jugadores[ buttondata->juego->jugadorActual ].esCPU && !gameEnded) {
       aiTurn(buttondata->juego, buttondata->juego->jugadorActual);
+
+      // ai goes again
+      buttondata->juego->jugadorActual = (buttondata->juego->jugadorActual + 1) % 2;
+      gameEnded = estadoTablero(buttondata->juego->tablero);
+      if (gameEnded) {
+        // TODO: hacer algo interesante si alguien ganó
+        // @luis
+        // Me pongo a hacerlo en lo que sigues con el programa
+        g_print("Juego terminó. Estado tablero: %c\n", gameEnded);
+      }
+
+      // TODO: move the vairables up
+      if (buttondata->juego->jugadores[ buttondata->juego->jugadorActual ].esCPU && !gameEnded) {
+        aiTurn(buttondata->juego, buttondata->juego->jugadorActual);
+      }
     }
+
 
   }
 
