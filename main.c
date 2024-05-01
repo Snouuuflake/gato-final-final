@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
   gtk_box_pack_start(GTK_BOX(juego.playingBox), label, FALSE, TRUE, 0);
 
   // imagen de jugador actual
-  pix = gdk_pixbuf_scale_simple(gdk_pixbuf_new_from_file("./MEDIA/x.png", &error), 20, 20, GDK_INTERP_BILINEAR);
+  pix = gdk_pixbuf_scale_simple(gdk_pixbuf_new_from_file("./MEDIA/X.png", &error), 20, 20, GDK_INTERP_BILINEAR);
 
   // asocia la imagen a la estructura del juego
   juego.playingImg = gtk_image_new_from_pixbuf(pix);
@@ -263,13 +263,13 @@ int main(int argc, char *argv[])
   gtk_box_pack_start(GTK_BOX(vBox1), label, FALSE, TRUE, 0);
 
   // imagen y nombre del jugador X
-  pix = gdk_pixbuf_new_from_file("./MEDIA/x.png", &error);
+  pix = gdk_pixbuf_new_from_file("./MEDIA/X.png", &error);
   pix = gdk_pixbuf_scale_simple(pix, 20, 20, GDK_INTERP_BILINEAR);
   image = gtk_image_new_from_pixbuf(pix);
   gtk_box_pack_start(GTK_BOX(vBox1), image, FALSE, TRUE, 0);
 
   // imagen y nombre del jugador O
-  pix = gdk_pixbuf_new_from_file("./MEDIA/o.png", &error);
+  pix = gdk_pixbuf_new_from_file("./MEDIA/O.png", &error);
   pix = gdk_pixbuf_scale_simple(pix, 20, 20, GDK_INTERP_BILINEAR);
   image = gtk_image_new_from_pixbuf(pix);
   gtk_box_pack_start(GTK_BOX(vBox1), image, FALSE, TRUE, 0);
@@ -289,7 +289,7 @@ void StopTheApp(GtkWidget *window, gpointer data)
 
   juego = (JUEGO *) data;
 
-  for (i = 0; i < 9; i++) 
+  for (i = 0; i < 9; i++)
   {
     free(juego->gstructArr[i]);
   }
@@ -307,11 +307,9 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
   GError *error = NULL;
 
   char imageSource[14];
-  char players[] = "xo"; // @luis, en el tablero usan mayúsculas, no se si mejor cambiar estas y los nombres de archivo
-                         // lo intenté y el UI se murió, supongo que las imágenes se acceden en varias partes
+  char players[] = "XO";
 
-  char gameEnded = 0; 
-
+  char gameEnded = 0;  // gboolean?
 
   // solo actua si está vacío el espacio
   if(buttondata->juego->tablero[buttondata->id] == ' ')
@@ -327,6 +325,7 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
     pix = gdk_pixbuf_scale_simple(gdk_pixbuf_new_from_file(imageSource, &error), 40, 40, GDK_INTERP_BILINEAR);
     buttondata->image = gtk_image_new_from_pixbuf(pix);
 
+    g_print("container: %p\n", eventbox);
     gtk_container_add(GTK_CONTAINER(eventbox), buttondata->image);
 
     gtk_widget_show(buttondata->image);
@@ -349,7 +348,8 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
     gameEnded = estadoTablero(buttondata->juego->tablero);
     if (gameEnded) {
       // TODO: hacer algo interesante si alguien ganó
-      // @luis 
+      // @luis
+      // Me pongo a hacerlo en lo que sigues con el programa
       g_print("Juego terminó. Estado tablero: %c\n", gameEnded);
     }
 
@@ -369,7 +369,7 @@ void aiTurn(JUEGO *juego, int playerIndex) {
   int chosenMove;
   int greatestScore;
   int tmpScore;
-  char noScore; //boolean
+  char noScore; //boolean <-- why not a gboolean?
 
   noScore = 1;
 
@@ -401,7 +401,8 @@ void aiTurn(JUEGO *juego, int playerIndex) {
     exit(0);
   }
 
-  button_pressed(juego->botones[ chosenMove ], NULL, juego->gstructArr[ chosenMove ]);
+  // don't ask me why, but you need to add 1 to the chosen move (L)
+  button_pressed(juego->botones[ chosenMove + 1 ], NULL, juego->gstructArr[ chosenMove ]);
 
   // this is for debugging and does not affect the real game in any way:
   (*getBoardItem(&board, chosenMove)) = getPiece(playerIndex);
@@ -440,7 +441,7 @@ void button_leave(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
   return;
 }
 
-void initJuego(JUEGO *juego) 
+void initJuego(JUEGO *juego)
 {
   int i = 0;
   char strBuffer[64];
@@ -456,10 +457,8 @@ void initJuego(JUEGO *juego)
   juego->inicio = NULL;
 
   for (i = 0; i < 2; i++) {
-    // TODO: esto, evidentemente, es temporal
     sprintf(strBuffer, "Jugador No.%d", i);
     strcpy(juego->jugadores[i].nombre, strBuffer);
-
     juego->jugadores[i].esCPU = 0;
   }
 
@@ -467,3 +466,4 @@ void initJuego(JUEGO *juego)
 
   return;
 }
+
