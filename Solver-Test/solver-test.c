@@ -4,15 +4,15 @@
 #include <time.h> 
 
 typedef struct def_boardstruct {
-	char a;
-	char b;
-	char c;
-	char d;
-	char e;
-	char f;
-	char g;
-	char h;
-	char i;
+  char a;
+  char b;
+  char c;
+  char d;
+  char e;
+  char f;
+  char g;
+  char h;
+  char i;
 } BOARDSTRUCT;
 
 typedef struct def_mmscore {
@@ -47,124 +47,124 @@ void printBoard(BOARDSTRUCT board) {
  *@return en caso de que haya un ganador, regresa el símbolo de quien ganó, si es empate regresa 'g' de gato, si no es gato ni hay ganador regresa ' '
  */
 char estadoTablero(char tab[9]){
-	int i, cont=0;
+  int i, cont=0;
 
-	// 0 1 2 
-	// 3 4 5
-	// 6 7 8
+  // 0 1 2 
+       // 3 4 5
+       // 6 7 8
 
-	for(i=0; i < 9; i=i+3){
-		if(tab[i] == tab[i+1] && tab[i] == tab[i+2]){
-			if (tab[i] != ' ') {
-				return tab[i];
-			}
-		}
-	}
+       for(i=0; i < 9; i=i+3){
+	 if(tab[i] == tab[i+1] && tab[i] == tab[i+2]){
+	   if (tab[i] != ' ') {
+	     return tab[i];
+	   }
+	 }
+       }
 
-	for(i = 0; i < 3; i++){
-		//printf("%d:%c %d:%c %d:%c",i,tab[i], i+3,tab[i+3], i+6, tab[i+6]);
-		if(tab[i] == tab[i+3] && tab[i] == tab[i+6]){
-			if (tab[i] != ' ') {
-				return tab[i];
-			}
-		}
-	}
+  for(i = 0; i < 3; i++){
+    //printf("%d:%c %d:%c %d:%c",i,tab[i], i+3,tab[i+3], i+6, tab[i+6]);
+    if(tab[i] == tab[i+3] && tab[i] == tab[i+6]){
+      if (tab[i] != ' ') {
+	return tab[i];
+      }
+    }
+  }
 
-	// busca diagonales
-	if(tab[0] == tab[4] && tab[0] == tab[8]){
-		if (tab[0] != ' ') {
-			return tab[0];
-		}
-	}                                                      
-	if(tab[2] == tab[4] && tab[2] == tab[6]){   
-		if (tab[2] != ' ') {
-			return tab[2];                                   
-		}
-	}                                             
+  // busca diagonales
+  if(tab[0] == tab[4] && tab[0] == tab[8]){
+    if (tab[0] != ' ') {
+      return tab[0];
+    }
+  }                                                      
+  if(tab[2] == tab[4] && tab[2] == tab[6]){   
+    if (tab[2] != ' ') {
+      return tab[2];                                   
+    }
+  }                                             
 
-	// busca gato
-	for(i = 0; i < 9; i++){
-		if(tab[i] == ' '){
-			cont++;
-		}
-	}
-	if(cont == 0){
-		return 'g';
-	}
-	else if(cont != 0){
-		return 0;
-	}
+  // busca gato
+  for(i = 0; i < 9; i++){
+    if(tab[i] == ' '){
+      cont++;
+    }
+  }
+  if(cont == 0){
+    return 'g';
+  }
+  else if(cont != 0){
+    return 0;
+  }
 }
 
 
 char *getBoardItem(BOARDSTRUCT *board, int index) {
-	switch (index) {
-		case 0:
-			return &(board->a);
-			break;
-		case 1:
-			return &(board->b);
-			break;
-		case 2:
-			return &(board->c);
-			break;
-		case 3:
-			return &(board->d);
-			break;
-		case 4:
-			return &(board->e);
-			break;
-		case 5:
-			return &(board->f);
-			break;
-		case 6:
-			return &(board->g);
-			break;
-		case 7:
-			return &(board->h);
-			break;
-		case 8:
-			return &(board->i);
-			break;
-		default:
-			printf("idiot (%d)\n", index);
-			return 0; // causes segfault so i know where I fucked up
-			break;
-	}
+  switch (index) {
+  case 0:
+    return &(board->a);
+    break;
+  case 1:
+    return &(board->b);
+    break;
+  case 2:
+    return &(board->c);
+    break;
+  case 3:
+    return &(board->d);
+    break;
+  case 4:
+    return &(board->e);
+    break;
+  case 5:
+    return &(board->f);
+    break;
+  case 6:
+    return &(board->g);
+    break;
+  case 7:
+    return &(board->h);
+    break;
+  case 8:
+    return &(board->i);
+    break;
+  default:
+    printf("Error: attempted to access index (%d)\n", index);
+    return NULL; // causes segfault so i know where I messed up. Can also be validted as a boolean
+    break;
+  }
 }
 
 void makeBoardArray(BOARDSTRUCT *board, char array[]) {
-	int i;
-	for (i = 0; i < 9; i++) {
-		array[i] = (*getBoardItem(board, i));
-	}
+  int i;
+  for (i = 0; i < 9; i++) {
+    array[i] = (*getBoardItem(board, i));
+  }
 }
 
 char getPiece(int index) {
-	char arr[] = {'X','O'};
-	return arr[index];
+  char arr[] = {'X','O'};
+  return arr[index];
 }
 
 /**
  * Returns from {10,0} now
  */
 int getScore(BOARDSTRUCT board, int piece, int square) {
-    char arr[9];
-    char c;
-    char state;
+  char arr[9];
+  char c;
+  char state;
 
-    c = getPiece(piece);
-    *(getBoardItem(&board,square)) = c;
+  c = getPiece(piece);
+  *(getBoardItem(&board,square)) = c;
 
-    makeBoardArray(&board, arr);
+  makeBoardArray(&board, arr);
 
-    state = estadoTablero(arr);
+  state = estadoTablero(arr);
 
-    if (state) {
-      return 10;
-    } else {
-      return 0;
-    }
+  if (state) {
+    return 10;
+  } else {
+    return 0;
+  }
 }
 
 
@@ -220,10 +220,10 @@ int mm2(BOARDSTRUCT board, int square, int piece, int ogpiece, int depth) {
 }
 
 int main(void) {
-	BOARDSTRUCT realBoard;
-	char boardArr[9];
-	int i;
-	int j;
+  BOARDSTRUCT realBoard;
+  char boardArr[9];
+  int i;
+  int j;
   int input;
   int cpuInput;
   int tmpScore;
@@ -232,14 +232,14 @@ int main(void) {
   
   srand(time(NULL)); 
 
-	for (i = 0; i < 9; i++) {
-		*(getBoardItem(&realBoard, i)) = ' ';
-	}
-	// 0 1 2
-	// 3 4 5
-	// 6 7 8
+  for (i = 0; i < 9; i++) {
+    *(getBoardItem(&realBoard, i)) = ' ';
+  }
+  // 0 1 2
+  // 3 4 5
+  // 6 7 8
 
-	makeBoardArray(&realBoard, boardArr);
+  makeBoardArray(&realBoard, boardArr);
   while (!estadoTablero(boardArr)) {
     for (i = 0; i < 3; i++) {
       for (j = 0; j < 3; j++) {
@@ -292,7 +292,7 @@ int main(void) {
   printf("final gametsate:\n");
   printBoard(realBoard);
 
-	return 0;
+  return 0;
 }
 
 

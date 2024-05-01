@@ -1,62 +1,7 @@
-#include <gtk-2.0/gtk/gtk.h>
+#include "header.h"
 
 // no he cambiado la imagen del titulo porque no me gusta como se ve :P
 
-/**
- * Area funcional (R)
-*/
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-/**
- * La ficha de cada jugador se infiere de su índice.
- */
-typedef struct def_jugador {
-  char nombre[256];
-  char esCPU;
-} JUGADOR;
-
-/**
- * Estado o "judada"
- * Formato: "XXOXXOXOO"
- */
-typedef struct def_estado {
-  char val[9];
-  struct def_estado *sigiente;
-  struct def_estado *anterior;
-} ESTADO;
-
-typedef struct def_juego {
-  GtkWidget *botones[9];
-  void *gstructArr[9];
-  char tablero[9];
-  ESTADO *inicio;
-  JUGADOR jugadores[2];
-  int jugadorActual;
-
-  GtkWidget *playingImg; // <-- L
-  GtkWidget *playingBox; // <-- L
-} JUEGO;
-
-/**
- * Argumento del callback de los botones
- * del tablero
- *
- * Cuando presionas un botón, manda esta
- * estructura, con el id del botón que
- * se presionó.
- *
- * Cuando la ia tira, cambia el valor de
- * id al botón que quiere presionar y
- * vuelve a llamar la función de cuando
- * se presiona un botón.
- */
-typedef struct def_gstruct {
-  JUEGO *juego;
-  GtkWidget *image; // <-- L
-  int id;
-} GSTRUCT;
 
 void initJuego(JUEGO *juego);
 
@@ -67,6 +12,7 @@ void initJuego(JUEGO *juego);
 void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data);
 void button_hover(GtkWidget *eventbox, GdkEventButton *event, gpointer data);
 void button_leave(GtkWidget *eventbox, GdkEventButton *event, gpointer data);
+void aiTurn(JUEGO *juego, int playerIndex);
 
 void StopTheApp(GtkWidget *window, gpointer data);
 
@@ -98,7 +44,9 @@ int main(int argc, char *argv[])
     GSTRUCT *buttonData;
 
     initJuego(&juego);
-    // populateButtonArray(&juego, verticalbox);
+
+    // TODO: temporary testing thing
+    juego.jugadores[1].esCPU = 1;
 
     // contadores
     int i = 0;
@@ -361,6 +309,9 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
     char imageSource[14];
     char players[] = "xo";
 
+    char gameEnded = 0; 
+
+
     // solo actua si está vacío el espacio
     if(buttondata->juego->tablero[buttondata->id] == ' ')
     {
@@ -391,15 +342,68 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
 
         gtk_box_pack_start(GTK_BOX(buttondata->juego->playingBox), buttondata->juego->playingImg, FALSE, TRUE, 0);
         
-        gtk_widget_show(buttondata->juego->playingImg);
+	gtk_widget_show(buttondata->juego->playingImg);
 
-	// TODO: checar si alguien ganó
 
+	gameEnded = estadoTablero(buttondata->juego->tablero);
+	if (gameEnded) {
+	  // TODO: hacer algo interesante si alguien ganó
+	  // @luis 
+	  g_print("Juego terminó. Estado tablero: %c\n", gameEnded);
+	}
+
+	// TODO: move the vairables up
+	if (buttondata->juego->jugadores[ buttondata->juego->jugadorActual ].esCPU && !gameEnded) {
+	  aiTurn(buttondata->juego, buttondata->juego->jugadorActual);
+	}
 
     }
 
     return;
 }
+
+void aiTurn(JUEGO *juego, int playerIndex) {
+  BOARDSTRUCT board;
+  int i;
+  int chosenMove;
+  int greatestScore;
+  int tmpScore;
+  char noScore; //boolean
+
+  noScore = 1;
+
+  for (i = 0; i < 9; i++) {
+    *getBoardItem(&board, i) = juego->tablero[i];
+  }
+
+  for (i = 0; i < 9; i++) {
+    if (*getBoardItem(&board, i) == ' ') {
+      tmpScore = mm2(board, i, playerIndex, playerIndex, 0);
+
+      if (noScore) {
+	greatestScore = tmpScore;
+	chosenMove = i;
+	noScore = 0;
+      } else {
+	if (tmpScore > greatestScore) {
+	  greatestScore = tmpScore;
+	  chosenMove = i;
+	}
+      }
+    }
+  }
+
+  // TODO: remove this i guess
+  if (noScore) {
+    g_print("AI has no available moves. HOW???\n");
+    exit(0);
+  }
+    
+  button_pressed(juego->botones[ chosenMove ], NULL, juego->gstructArr[ chosenMove ]);
+}
+	
+      
+  
 
 void button_hover(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
 {
