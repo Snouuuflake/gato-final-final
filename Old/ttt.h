@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <gtk/gtk.h>
+#include <gtk-2.0/gtk/gtk.h>
 
 /**
  * La ficha de cada jugador se infiere de su índice.
@@ -17,6 +17,7 @@ typedef struct def_jugador {
  */
 typedef struct def_estado {
   char val[9];
+  int jugador;
   struct def_estado *sigiente;
   struct def_estado *anterior;
 } ESTADO;

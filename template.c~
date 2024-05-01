@@ -381,6 +381,7 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
         
         // cambia el jugador
         buttondata->juego->jugadorActual = (buttondata->juego->jugadorActual + 1) % 2;
+
         // cambia la imagen del turno
         sprintf(imageSource, "./MEDIA/%c.png", players[buttondata->juego->jugadorActual]);
 
@@ -392,10 +393,6 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
         gtk_box_pack_start(GTK_BOX(buttondata->juego->playingBox), buttondata->juego->playingImg, FALSE, TRUE, 0);
         
         gtk_widget_show(buttondata->juego->playingImg);
-
-	// TODO: checar si alguien ganó
-
-
     }
 
     return;
