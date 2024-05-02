@@ -34,6 +34,8 @@ typedef struct def_juego {
 
   GtkWidget *playingImg; // <-- L
   GtkWidget *playingBox; // <-- L
+
+  gboolean hardMode; // bool
 } JUEGO;
 
 /**
