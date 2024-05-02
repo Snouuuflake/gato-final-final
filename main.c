@@ -16,8 +16,11 @@ void aiTurn(JUEGO *juego, int playerIndex);
 
 void StopTheApp(GtkWidget *window, gpointer data);
 
+// !!! TODO: args are -c for vs ai and -h for hard mode
 int main(int argc, char *argv[])
 {
+
+
   // ventana principal
   GtkWidget *window, *mainBox;
 
@@ -45,8 +48,22 @@ int main(int argc, char *argv[])
 
   initJuego(&juego);
 
-  // TODO: temporary testing thing
-  juego.jugadores[1].esCPU = 1;
+
+  // TODO: very termporary testing args ---------------------
+  // !!! args are -c for vs ai and -h for hard mode
+  int asdf;
+  for (asdf = 0; asdf < argc; asdf++) {
+    if (strcmp(argv[asdf], "-h") == 0) {
+      juego.hardMode = TRUE;
+    }
+
+    if (strcmp(argv[asdf], "-c") == 0) {
+      juego.jugadores[1].esCPU = 1;
+    }
+  }
+  // --------------------------------------------------------
+
+
 
   // contadores
   int i = 0;
@@ -216,6 +233,7 @@ int main(int argc, char *argv[])
       pix = gdk_pixbuf_new_from_file("./MEDIA/blank.png", &error);
       pix = gdk_pixbuf_scale_simple(pix, 40, 40, GDK_INTERP_BILINEAR);
       image = gtk_image_new_from_pixbuf(pix);
+      eventbox = gtk_event_box_new();
 
       // le da la info del botón a la estructura
       buttonData = (GSTRUCT *) juego.gstructArr[(i * 3) + j];
@@ -223,10 +241,11 @@ int main(int argc, char *argv[])
       buttonData->image = image;
       buttonData->id = (i * 3) + j;
 
+      // myflag
+      g_print("%d\n", (i * 3) + j);
       juego.botones[(i * 3) + j] = eventbox;
 
       // crea una caja de eventos y le asocia diversos eventos para estilos
-      eventbox = gtk_event_box_new();
       g_signal_connect(G_OBJECT(eventbox), "button_press_event", G_CALLBACK(button_pressed), buttonData);
       g_signal_connect(G_OBJECT(eventbox), "enter-notify-event", G_CALLBACK(button_hover), buttonData);
       g_signal_connect(G_OBJECT(eventbox), "leave-notify-event", G_CALLBACK(button_leave), buttonData);
@@ -289,7 +308,7 @@ void StopTheApp(GtkWidget *window, gpointer data)
 
   juego = (JUEGO *) data;
 
-  for (i = 0; i < 9; i++)
+  for (i = 0; i < 9; i++) 
   {
     free(juego->gstructArr[i]);
   }
@@ -307,7 +326,7 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
   GError *error = NULL;
 
   char imageSource[14];
-  char players[] = "XO";
+  char players[] = "XO"; 
 
   char gameEnded = 0;  // gboolean?
 
@@ -325,7 +344,6 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
     pix = gdk_pixbuf_scale_simple(gdk_pixbuf_new_from_file(imageSource, &error), 40, 40, GDK_INTERP_BILINEAR);
     buttondata->image = gtk_image_new_from_pixbuf(pix);
 
-    g_print("container: %p\n", eventbox);
     gtk_container_add(GTK_CONTAINER(eventbox), buttondata->image);
 
     gtk_widget_show(buttondata->image);
@@ -348,8 +366,8 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
     gameEnded = estadoTablero(buttondata->juego->tablero);
     if (gameEnded) {
       // TODO: hacer algo interesante si alguien ganó
-      // @luis
-      // Me pongo a hacerlo en lo que sigues con el programa
+      // @luis 
+      // Me pongo a hacerlo en lo que sigues con el programa 
       g_print("Juego terminó. Estado tablero: %c\n", gameEnded);
     }
 
@@ -357,8 +375,6 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
     if (buttondata->juego->jugadores[ buttondata->juego->jugadorActual ].esCPU && !gameEnded) {
       aiTurn(buttondata->juego, buttondata->juego->jugadorActual);
 
-      // ai goes again
-      buttondata->juego->jugadorActual = (buttondata->juego->jugadorActual + 1) % 2;
       gameEnded = estadoTablero(buttondata->juego->tablero);
       if (gameEnded) {
         // TODO: hacer algo interesante si alguien ganó
@@ -367,9 +383,14 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
         g_print("Juego terminó. Estado tablero: %c\n", gameEnded);
       }
 
-      // TODO: move the vairables up
-      if (buttondata->juego->jugadores[ buttondata->juego->jugadorActual ].esCPU && !gameEnded) {
-        aiTurn(buttondata->juego, buttondata->juego->jugadorActual);
+      if (buttondata->juego->hardMode) {
+        // ai goes again
+        // "resetting" turn
+        buttondata->juego->jugadorActual = (buttondata->juego->jugadorActual + 1) % 2;
+        // TODO: move the vairables up TODO: what does this mean?
+        if (buttondata->juego->jugadores[ buttondata->juego->jugadorActual ].esCPU && !gameEnded) {
+          aiTurn(buttondata->juego, buttondata->juego->jugadorActual);
+        }
       }
     }
 
@@ -392,7 +413,6 @@ void aiTurn(JUEGO *juego, int playerIndex) {
   for (i = 0; i < 9; i++) {
     *getBoardItem(&board, i) = juego->tablero[i];
   }
-
 
   for (i = 0; i < 9; i++) {
     if (*getBoardItem(&board, i) == ' ') {
@@ -417,8 +437,8 @@ void aiTurn(JUEGO *juego, int playerIndex) {
     exit(0);
   }
 
-  // don't ask me why, but you need to add 1 to the chosen move (L)
-  button_pressed(juego->botones[ chosenMove + 1 ], NULL, juego->gstructArr[ chosenMove ]);
+  // myflag
+  button_pressed(juego->botones[ chosenMove ], NULL, juego->gstructArr[ chosenMove ]);
 
   // this is for debugging and does not affect the real game in any way:
   (*getBoardItem(&board, chosenMove)) = getPiece(playerIndex);
@@ -457,7 +477,7 @@ void button_leave(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
   return;
 }
 
-void initJuego(JUEGO *juego)
+void initJuego(JUEGO *juego) 
 {
   int i = 0;
   char strBuffer[64];
@@ -482,4 +502,3 @@ void initJuego(JUEGO *juego)
 
   return;
 }
-
