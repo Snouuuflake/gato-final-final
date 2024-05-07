@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define AI_NAME "Hercules.raw"
+
 /**
  * La ficha de cada jugador se infiere de su índice.
  */
@@ -19,25 +21,35 @@ typedef struct def_jugador {
  * Formato: "XXOXXOXOO"
  */
 typedef struct def_estado {
-  char tablero[9];
-  int turno;
+  char val[9];
   struct def_estado *sig;
   struct def_estado *ant;
 } ESTADO;
+
+typedef struct def_
+{
+  GtkWidget *window;
+  GtkWidget *board;
+  GtkWidget *moveButtons[2];
+  GtkWidget *playingImg;
+  GtkWidget *playingBox;
+  GtkWidget *playerImg[2];
+  GtkWidget *playerName[2];
+  GdkPixbuf *m20[3];
+  GdkPixbuf *m40[3];
+} GameWidgets;
 
 typedef struct def_juego {
   GtkWidget *botones[9];
   void *gstructArr[9];
   char tablero[9];
   ESTADO *inicio;
-  ESTADO *actual;
   JUGADOR jugadores[2];
   int jugadorActual;
 
-  GtkWidget *playingImg; // <-- L
-  GtkWidget *playingBox; // <-- L
-
+  int estadoPartida; // <-- L
   gboolean hardMode;
+  GameWidgets graficos;
 } JUEGO;
 
 /**
@@ -89,6 +101,15 @@ typedef struct def_mmscore { //TODO: remove- i dont think this is used
   char exists;
 } MMSCORE;
 
+typedef struct def_ngdata
+{
+  JUEGO *datos;
+  GtkWidget *players[2];
+  GtkWidget *radioButtons[2];
+  GtkWidget *chb;
+  GtkWidget *eLabel;
+} NGDATA;
+
 
 void printBoard(BOARDSTRUCT board);
 char *getBoardItem(BOARDSTRUCT *board, int index);
@@ -97,10 +118,31 @@ char getPiece(int index);
 int getScore(BOARDSTRUCT board, int piece, int square);
 int mm2(BOARDSTRUCT board, int square, int piece, int ogpiece, int depth);
 
+void loadMainWindow(JUEGO *juego);
+
+void nuevaPartida(GtkWidget *widget, gpointer data);
+void terminarPartida(GtkWidget *widget, gpointer data);
+
+void guardarPartida(GtkWidget *widget, gpointer data);
+void cargarPartida(GtkWidget *widget, gpointer data);
+
+void comoJugar(GtkWidget *widget, gpointer data);
+void creditos(GtkWidget *widget, gpointer data);
+
+void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data);
+void button_hover(GtkWidget *eventbox, GdkEventButton *event, gpointer data);
+void button_leave(GtkWidget *eventbox, GdkEventButton *event, gpointer data);
+
+void radio_changed(GtkWidget *widget, gpointer data);
+
+void restartJuego(JUEGO *juego, gboolean vsAI, gboolean hardMode, char jug1[], char jug2[]);
+
+void StopTheApp(GtkWidget *window, gpointer data);
+
 /**
- * historial.h (M)
+ * historial.c (M)
  */
-void liberarHistorial(JUEGO *juego);
 void anexarEstado(JUEGO *juego);
 void imprimirHistorial(JUEGO *juego);
+void liberarHistorial(JUEGO *juego);
 

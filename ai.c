@@ -141,7 +141,6 @@ int getScore(BOARDSTRUCT board, int piece, int square) {
  * 
  */
 int mm2(BOARDSTRUCT board, int square, int piece, int ogpiece, int depth) {
-  char c = 0; // paranoia
   int i = 0;
   int crit = 0;
   int chosenMove = -1;

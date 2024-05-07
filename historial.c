@@ -86,7 +86,8 @@ void anexarEstado(JUEGO *juego)
 
 
 
-void imprimirHistorial(JUEGO *juego){
+void imprimirHistorial(JUEGO *juego)
+{
   ESTADO *temp;
   int i;
 
@@ -104,6 +105,7 @@ void imprimirHistorial(JUEGO *juego){
 
 
 void liberarHistorial(JUEGO *juego)
+  void liberarHistorial(JUEGO *juego);
 {
   ESTADO *temp;
 
