@@ -105,7 +105,6 @@ void imprimirHistorial(JUEGO *juego)
 
 
 void liberarHistorial(JUEGO *juego)
-  void liberarHistorial(JUEGO *juego);
 {
   ESTADO *temp;
 

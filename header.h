@@ -21,16 +21,17 @@ typedef struct def_jugador {
  * Formato: "XXOXXOXOO"
  */
 typedef struct def_estado {
-  char val[9];
+  char tablero[9];
+  int turno;
   struct def_estado *sig;
   struct def_estado *ant;
 } ESTADO;
 
-typedef struct def_
+typedef struct def_gamewidgets // (L)
 {
   GtkWidget *window;
   GtkWidget *board;
-  GtkWidget *moveButtons[2];
+  GtkWidget *moveButtons[2]; // TODO:!!!
   GtkWidget *playingImg;
   GtkWidget *playingBox;
   GtkWidget *playerImg[2];
@@ -44,6 +45,7 @@ typedef struct def_juego {
   void *gstructArr[9];
   char tablero[9];
   ESTADO *inicio;
+  ESTADO *actual;
   JUGADOR jugadores[2];
   int jugadorActual;
 

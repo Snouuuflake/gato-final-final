@@ -289,7 +289,7 @@ void restartJuego(JUEGO *juego, gboolean vsAI, gboolean hardMode, char jug1[], c
   while(juego->inicio != NULL)
   {
     movil = juego->inicio;
-    juego->inicio = movil->sigiente;
+    juego->inicio = movil->sig;
     
     free(movil);
   }
