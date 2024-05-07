@@ -45,4 +45,5 @@ char estadoTablero(char tab[9]){
   else if(cont != 0){
     return 0;
   }  
+  return 0;
 }

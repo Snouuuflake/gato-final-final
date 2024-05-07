@@ -320,6 +320,9 @@ void StopTheApp(GtkWidget *window, gpointer data)
 
 void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
 {
+  //char *args[] = {"./MEDIA/hercules.wav", "-d", "5"};
+  //execv("aplay", args);
+  system("aplay ./MEDIA/hercules.wav -d 47 &");
   GSTRUCT *buttondata = (GSTRUCT *) data;
 
   GdkPixbuf *pix;

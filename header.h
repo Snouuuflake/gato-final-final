@@ -19,9 +19,10 @@ typedef struct def_jugador {
  * Formato: "XXOXXOXOO"
  */
 typedef struct def_estado {
-  char val[9];
-  struct def_estado *sigiente;
-  struct def_estado *anterior;
+  char tablero[9];
+  int turno;
+  struct def_estado *sig;
+  struct def_estado *ant;
 } ESTADO;
 
 typedef struct def_juego {
@@ -29,13 +30,14 @@ typedef struct def_juego {
   void *gstructArr[9];
   char tablero[9];
   ESTADO *inicio;
+  ESTADO *actual;
   JUGADOR jugadores[2];
   int jugadorActual;
 
   GtkWidget *playingImg; // <-- L
   GtkWidget *playingBox; // <-- L
 
-  gboolean hardMode; // bool
+  gboolean hardMode;
 } JUEGO;
 
 /**
@@ -94,4 +96,11 @@ void makeBoardArray(BOARDSTRUCT *board, char array[]);
 char getPiece(int index);
 int getScore(BOARDSTRUCT board, int piece, int square);
 int mm2(BOARDSTRUCT board, int square, int piece, int ogpiece, int depth);
+
+/**
+ * historial.h (M)
+ */
+void liberarHistorial(JUEGO *juego);
+void anexarEstado(JUEGO *juego);
+void imprimirHistorial(JUEGO *juego);
 
