@@ -75,6 +75,7 @@ typedef struct def_gstruct {
   JUEGO *juego;
   GtkWidget *image; // <-- L
   int id;
+  gboolean secondTurn;
 } GSTRUCT;
 
 /**
@@ -115,7 +116,7 @@ typedef struct def_ngdata
 
 char estadoTablero(char tab[9]);
 
-void aiTurn(JUEGO *juego, int playerIndex);
+void aiTurn(JUEGO *juego, int playerIndex, gboolean secondTurn);
 
 void printBoard(BOARDSTRUCT board);
 char *getBoardItem(BOARDSTRUCT *board, int index);

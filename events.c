@@ -41,7 +41,11 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
     gtk_widget_modify_bg(eventbox, GTK_STATE_NORMAL, &color);
 
     // cambia el valor en el arreglo
-    nuevo->valor.tablero[buttondata->id] = players[buttondata->juego->actual->valor.turno];
+    if (buttondata->secondTurn) { // only happens in hard mode, means previous player had an extra turn
+      nuevo->valor.tablero[buttondata->id] = players[(buttondata->juego->actual->valor.turno + 1) % 2];
+    } else {
+      nuevo->valor.tablero[buttondata->id] = players[buttondata->juego->actual->valor.turno];
+    }
 
     gtk_widget_destroy(buttondata->image);
 

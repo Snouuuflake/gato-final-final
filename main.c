@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-void aiTurn(JUEGO *juego, int playerIndex) {
+void aiTurn(JUEGO *juego, int playerIndex, gboolean secondTurn) {
   BOARDSTRUCT board;
   int i;
   int chosenMove;
@@ -35,12 +35,10 @@ void aiTurn(JUEGO *juego, int playerIndex) {
   chosenMove = 0; // just in case
   chosenMoveExists = 0;
 
-  g_print("1\n");
   for (i = 0; i < 9; i++) {
     *getBoardItem(&board, i) = juego->actual->valor.tablero[i];
   }
 
-  g_print("2\n");
   for (i = 0; i < 9; i++) {
     if (*getBoardItem(&board, i) == ' ') {
       tmpScore = getMoveScore(board, i, playerIndex, playerIndex, 0);
@@ -63,16 +61,19 @@ void aiTurn(JUEGO *juego, int playerIndex) {
     }
   }
 
-  g_print("3\n");
 
+  // TODO: remove this maybe? its for debugging.
   (*getBoardItem(&board, chosenMove)) = getPiece(playerIndex);
   printBoard(board);
   g_print("chosenMove: %d\n", chosenMove);
 
+  // this gets undonde after calling button_pressed
+  if (secondTurn) {
+    ((GSTRUCT *) juego->gstructArr[ chosenMove ])->secondTurn = 1;
+  }
   button_pressed(juego->botones[ chosenMove ], NULL, juego->gstructArr[ chosenMove ]);
 
   // this is for debugging and does not affect the real game in any way:
-  g_print("4\n");
 }
 
 void initJuego(JUEGO *juego) 
