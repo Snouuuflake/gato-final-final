@@ -20,37 +20,41 @@ typedef struct def_jugador {
  * Estado o "judada"
  * Formato: "XXOXXOXOO"
  */
-typedef struct def_estado {
+typedef struct def_estado 
+{
   char tablero[9];
   int turno;
-  struct def_estado *sig;
-  struct def_estado *ant;
+  int estadoPartida;
 } ESTADO;
+
+typedef struct def_lista {
+  ESTADO valor;
+  struct def_lista *sig;
+  struct def_lista *ant;
+} LISTA;
 
 typedef struct def_gamewidgets // (L)
 {
   GtkWidget *window;
-  GtkWidget *board;
-  GtkWidget *moveButtons[2]; // TODO:!!!
   GtkWidget *playingImg;
   GtkWidget *playingBox;
+  GtkWidget *moveButtons[2];
   GtkWidget *playerImg[2];
   GtkWidget *playerName[2];
+  GtkWidget *flames[2];
   GdkPixbuf *m20[3];
   GdkPixbuf *m40[3];
+  GdkPixbuf *hercules;
 } GameWidgets;
 
 typedef struct def_juego {
+  JUGADOR jugadores[2];
+  gboolean hardMode;
+  LISTA *actual;
+
   GtkWidget *botones[9];
   void *gstructArr[9];
-  char tablero[9];
-  ESTADO *inicio;
-  ESTADO *actual;
-  JUGADOR jugadores[2];
-  int jugadorActual;
 
-  int estadoPartida; // <-- L
-  gboolean hardMode;
   GameWidgets graficos;
 } JUEGO;
 
@@ -74,18 +78,12 @@ typedef struct def_gstruct {
 } GSTRUCT;
 
 /**
- * estadoTablero.c (M)
- */
-char estadoTablero(char tab[9]);
-
-/**
  * ai.c (R)
  */
-
 /**
- * Esencialmente una forma de mandar todos
- * los datos de un arreglo como parametro
- * de entrada
+ * Esencialmente una forma de mandar un
+ * arreglo como variable y no apuntador
+ * if that makes sense
  */
 typedef struct def_boardstruct {
   char a;
@@ -105,12 +103,7 @@ typedef struct def_scorestruct {
   char exists; // boolean
 } SCORESTRUCT; // minimax score
 
-void printBoard(BOARDSTRUCT board);
-char *getBoardItem(BOARDSTRUCT *board, int index);
-void makeBoardArray(BOARDSTRUCT *board, char array[]);
-char getPiece(int index);
-SCORESTRUCT getMoveScore(BOARDSTRUCT board, int square, int piece, int ogpiece, int depth);
-
+// new game data (L)
 typedef struct def_ngdata
 {
   JUEGO *datos;
@@ -120,7 +113,15 @@ typedef struct def_ngdata
   GtkWidget *eLabel;
 } NGDATA;
 
+char estadoTablero(char tab[9]);
 
+void aiTurn(JUEGO *juego, int playerIndex);
+
+void printBoard(BOARDSTRUCT board);
+char *getBoardItem(BOARDSTRUCT *board, int index);
+void makeBoardArray(BOARDSTRUCT *board, char array[]);
+char getPiece(int index);
+SCORESTRUCT getMoveScore(BOARDSTRUCT board, int square, int piece, int ogpiece, int depth);
 
 void loadMainWindow(JUEGO *juego);
 
@@ -130,8 +131,15 @@ void terminarPartida(GtkWidget *widget, gpointer data);
 void guardarPartida(GtkWidget *widget, gpointer data);
 void cargarPartida(GtkWidget *widget, gpointer data);
 
+gint saveGame(JUEGO *datos, GtkWidget *parent);
+gint loadGame(JUEGO *datos, GtkWidget *parent);
+
 void comoJugar(GtkWidget *widget, gpointer data);
 void creditos(GtkWidget *widget, gpointer data);
+
+void endPopup(JUEGO *juego, char endState);
+
+void displayHardMode(JUEGO *juego);
 
 void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data);
 void button_hover(GtkWidget *eventbox, GdkEventButton *event, gpointer data);
@@ -139,14 +147,21 @@ void button_leave(GtkWidget *eventbox, GdkEventButton *event, gpointer data);
 
 void radio_changed(GtkWidget *widget, gpointer data);
 
-void restartJuego(JUEGO *juego, gboolean vsAI, gboolean hardMode, char jug1[], char jug2[]);
+void initJuego(JUEGO *juego);
+void resetGame(JUEGO *juego);
+void setNewGame(JUEGO *juego, gboolean vsAI, gboolean hardMode, char jug1[], char jug2[]);
 
 void StopTheApp(GtkWidget *window, gpointer data);
 
 /**
  * historial.c (M)
  */
-void anexarEstado(JUEGO *juego);
-void imprimirHistorial(JUEGO *juego);
-void liberarHistorial(JUEGO *juego);
 
+void lastTurn(GtkWidget *widget, gpointer data);
+void nextTurn(GtkWidget *widget, gpointer data);
+
+void coppyBoardState(JUEGO *juego);
+void coppyPlayersState(JUEGO *juego);
+
+void saveFile(char fileName[], JUEGO *datos, GtkWidget *parent);
+int loadFile(char fileName[], JUEGO *datos, GtkWidget *parent);
