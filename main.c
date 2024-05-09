@@ -79,6 +79,7 @@ void initJuego(JUEGO *juego)
   juego->actual = (LISTA *) malloc(sizeof(LISTA));
   juego->actual->valor.estadoPartida = 0;
   juego->actual->valor.turno = 0;
+  juego->actual->valor.playable = FALSE;
   juego->actual->sig = NULL;
   juego->actual->ant = NULL;
 

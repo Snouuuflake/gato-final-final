@@ -25,6 +25,7 @@ typedef struct def_estado
   char tablero[9];
   int turno;
   int estadoPartida;
+  gboolean playable;
 } ESTADO;
 
 typedef struct def_lista {
