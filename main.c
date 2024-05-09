@@ -69,7 +69,7 @@ void aiTurn(JUEGO *juego, int playerIndex, gboolean secondTurn) {
 
   // this gets undonde after calling button_pressed
   if (secondTurn) {
-    ((GSTRUCT *) juego->gstructArr[ chosenMove ])->secondTurn = 1;
+    ((GSTRUCT *) juego->gstructArr[ chosenMove ])->doubleTurn = 1;
   }
   button_pressed(juego->botones[ chosenMove ], NULL, juego->gstructArr[ chosenMove ]);
 
@@ -149,7 +149,7 @@ void setNewGame(JUEGO *juego, gboolean vsAI, gboolean hardMode, char jug1[], cha
 
   if(juego->jugadores[0].esCPU)
   {
-    aiTurn(juego, juego->actual->valor.turno);
+    aiTurn(juego, juego->actual->valor.turno, FALSE);
     gtk_widget_set_sensitive(juego->graficos.moveButtons[0], FALSE);
   }
 

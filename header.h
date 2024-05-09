@@ -75,7 +75,7 @@ typedef struct def_gstruct {
   JUEGO *juego;
   GtkWidget *image; // <-- L
   int id;
-  gboolean secondTurn;
+  gboolean doubleTurn;
 } GSTRUCT;
 
 /**
