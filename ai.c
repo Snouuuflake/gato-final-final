@@ -59,7 +59,7 @@ char *getBoardItem(BOARDSTRUCT *board, int index) {
     break;
   default:
     printf("Error: attempted to access index (%d)\n", index);
-    return NULL; // causes segfault so i know where I messed up. Can also be validted as a boolean
+    return NULL; // causes segfault so i know where I messed up. Can also be validated as a boolean
     break;
   }
 }
@@ -89,8 +89,24 @@ char getPiece(int index) {
 
 
 /**
- * for real this time
- * TODO: write this
+ * @fn Función que cuantifica en un entero que tan conveninente es jugar en el
+ * espacio con índice square para el jugador con indice ogpiece en el tablero
+ * board. Funciona llamándose recursivamente sobre cada espacio en blanco del
+ * tablero hasta evaluar cada posible fin de juego y regresar su calificacion.
+ * Si una instancia de la función no termina un juego, intenta regresar la suma
+ * de si misma para cada espacio en blanco restante. La suma de las calificaciónes
+ * regresadas en un nivel de recursión se dividen entre la profunidad del nivel, 
+ * de esta forma dándole mayor peso a donde se gana o se pierde en menos pasos.
+ *
+ * @param board BOARDSTRUCT con el tablero donde se va a simular jugar
+ * @param square Espacio donde se va a simular tirar
+ * @param piece Índice de jugador que actualmente se está simulando
+ * @param ogpiece Índice de jugador que se espera que gane
+ * @param depth Profunidad (profunidad de recursión)
+ *
+ * @return SCORESTRUCT con la "calificación" de jugar en ese espacio.
+ * (profunidad siempre = 0 y exists siempre = 1; solo son relevantes en
+ * la recursión)
  */
 SCORESTRUCT getMoveScore(BOARDSTRUCT board, int square, int piece, int ogpiece, int depth) {
   int i = 0;
