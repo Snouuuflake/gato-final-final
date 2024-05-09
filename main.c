@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-void aiTurn(JUEGO *juego, int playerIndex, gboolean secondTurn) {
+void aiTurn(JUEGO *juego, int playerIndex) {
   BOARDSTRUCT board;
   int i;
   int chosenMove;
@@ -67,10 +67,6 @@ void aiTurn(JUEGO *juego, int playerIndex, gboolean secondTurn) {
   printBoard(board);
   g_print("chosenMove: %d\n", chosenMove);
 
-  // this gets undonde after calling button_pressed
-  //if (0 && secondTurn) {
-    //((GSTRUCT *) juego->gstructArr[ chosenMove ])->doubleTurn = 1;
-  //}
   button_pressed(juego->botones[ chosenMove ], NULL, juego->gstructArr[ chosenMove ]);
 
   // this is for debugging and does not affect the real game in any way:
@@ -150,7 +146,7 @@ void setNewGame(JUEGO *juego, gboolean vsAI, gboolean hardMode, char jug1[], cha
 
   if(juego->jugadores[0].esCPU)
   {
-    aiTurn(juego, juego->actual->valor.turno, FALSE);
+    aiTurn(juego, juego->actual->valor.turno);
     gtk_widget_set_sensitive(juego->graficos.moveButtons[0], FALSE);
   }
 
@@ -242,7 +238,7 @@ void displayHardMode(JUEGO *juego)
 
   for(i = 0; i < 2; i++)
   {
-    gtk_widget_show(juego->graficos.flames[i]);
+    //gtk_widget_show(juego->graficos.flames[i]);
   }
 
   return;

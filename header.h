@@ -116,7 +116,7 @@ typedef struct def_ngdata
 
 char estadoTablero(char tab[9]);
 
-void aiTurn(JUEGO *juego, int playerIndex, gboolean secondTurn);
+void aiTurn(JUEGO *juego, int playerIndex);
 
 void printBoard(BOARDSTRUCT board);
 char *getBoardItem(BOARDSTRUCT *board, int index);
