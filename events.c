@@ -5,7 +5,6 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
   GSTRUCT *buttondata = (GSTRUCT *) data;
   LISTA *nuevo, *temp, *temp2;
   GdkColor color;
-  int toPlay; // quien va a jugar
 
   char players[] = "XO";
 
@@ -35,21 +34,19 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
     buttondata->juego->actual->sig = nuevo; // <-- el siguiente del actual es el nuevo elemento
     
     nuevo->valor = buttondata->juego->actual->valor;
-
-    if (buttondata->doubleTurn) { // @luis con esto repido el jugador en el historial
-      nuevo->valor.turno = (buttondata->juego->actual->valor.turno + 1);
-      toPlay = (buttondata->juego->actual->valor.turno + 1) % 2;
+    if (buttondata->juego->doubleTurn == TRUE) {
+      nuevo->valor.turno = buttondata->juego->actual->valor.turno;
     } else {
       nuevo->valor.turno = (buttondata->juego->actual->valor.turno + 1) % 2;
-      toPlay = buttondata->juego->actual->valor.turno;
     }
+
 
     // cambia el color (en caso de tiro de ia)
     gdk_color_parse("#A3A3A3", &color);
     gtk_widget_modify_bg(eventbox, GTK_STATE_NORMAL, &color);
 
     // cambia el valor en el arreglo
-    nuevo->valor.tablero[buttondata->id] = players[toPlay]; // <- @luis
+    nuevo->valor.tablero[buttondata->id] = players[buttondata->juego->actual->valor.turno];
 
     gtk_widget_destroy(buttondata->image);
 
@@ -80,12 +77,15 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
     }
 
     // TODO: move the vairables up
-    if (buttondata->juego->jugadores[nuevo->valor.turno].esCPU && !gameEnded && buttondata->doubleTurn == FALSE) {
-      aiTurn(buttondata->juego, buttondata->juego->actual->valor.turno, FALSE);
-      if (buttondata->juego->hardMode && !buttondata->doubleTurn) {
-        aiTurn(buttondata->juego, buttondata->juego->actual->valor.turno, TRUE);
-        buttondata->doubleTurn = 0;
+    if (buttondata->juego->jugadores[nuevo->valor.turno].esCPU && !gameEnded && !buttondata->juego->doubleTurn) {
+      if (buttondata->juego->hardMode) {
+        buttondata->juego->doubleTurn = TRUE;
+        aiTurn(buttondata->juego, buttondata->juego->actual->valor.turno, TRUE); // TODO: remove bool from this function
+        aiTurn(buttondata->juego, buttondata->juego->actual->valor.turno, FALSE);
+      } else {
+        aiTurn(buttondata->juego, buttondata->juego->actual->valor.turno, FALSE);
       }
+
     }
   }
   else if(!buttondata->juego->actual->valor.estadoPartida)
@@ -93,7 +93,7 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
     nuevaPartida(NULL, buttondata->juego);
   }
 
-
+    buttondata->juego->doubleTurn = FALSE;
   return;
 }
 

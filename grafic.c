@@ -220,7 +220,6 @@ void loadMainWindow(JUEGO *juego)
       buttonData = (GSTRUCT *) juego->gstructArr[(i * 3) + j];
       buttonData->juego = juego;
       buttonData->id = (i * 3) + j;
-      buttonData->doubleTurn = FALSE;
 
       // crea una caja de eventos y le asocia diversos eventos para estilos
       juego->botones[(i * 3) + j] = gtk_event_box_new();

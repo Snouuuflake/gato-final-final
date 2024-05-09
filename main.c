@@ -68,9 +68,9 @@ void aiTurn(JUEGO *juego, int playerIndex, gboolean secondTurn) {
   g_print("chosenMove: %d\n", chosenMove);
 
   // this gets undonde after calling button_pressed
-  if (secondTurn) {
-    ((GSTRUCT *) juego->gstructArr[ chosenMove ])->doubleTurn = 1;
-  }
+  //if (0 && secondTurn) {
+    //((GSTRUCT *) juego->gstructArr[ chosenMove ])->doubleTurn = 1;
+  //}
   button_pressed(juego->botones[ chosenMove ], NULL, juego->gstructArr[ chosenMove ]);
 
   // this is for debugging and does not affect the real game in any way:
@@ -86,6 +86,7 @@ void initJuego(JUEGO *juego)
   juego->actual->sig = NULL;
   juego->actual->ant = NULL;
 
+  juego->doubleTurn = FALSE;
   for(i = 0; i < 9; i++) 
   {
     juego->gstructArr[i] = (void *) malloc(sizeof(GSTRUCT));
