@@ -19,7 +19,6 @@ char estadoTablero(char tab[9])
   int i = 0;
   int cont = 0;
 
-  // cambié el foprmato porque no entendí nada xd
   for(i = 0; i < 9; i += 3)
   {
     if(tab[i] == tab[i + 1] && tab[i] == tab[i + 2])
