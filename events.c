@@ -31,7 +31,6 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
     nuevo = (LISTA*) malloc(sizeof(LISTA)); // <-- crea un nueva instancia de historial
     nuevo->ant = buttondata->juego->actual; // <-- logicamente su anterior era el turno actual
     nuevo->sig = NULL; // <-- no tiene siguiente
-
     buttondata->juego->actual->sig = nuevo; // <-- el siguiente del actual es el nuevo elemento
     
     nuevo->valor = buttondata->juego->actual->valor;
@@ -45,6 +44,7 @@ void button_pressed(GtkWidget *eventbox, GdkEventButton *event, gpointer data)
 
     if (buttondata->juego->jugadores[nuevo->valor.turno].esCPU || buttondata->juego->hardMode) { 
       // stops user from changing the cpu's moves
+      // hercules is a just god and does not allow cheating in a true challenge
       nuevo->valor.playable = FALSE;
     } else {
       nuevo->valor.playable = TRUE;
@@ -197,7 +197,7 @@ void StopTheApp(GtkWidget *window, gpointer data)
 void lastTurn(GtkWidget *widget, gpointer data)
 {
   JUEGO *datos = (JUEGO *) data;
-  gboolean canSwitch; //TODO: unused?
+  gboolean canSwitch; 
 
   if(datos->actual != NULL && datos->actual->ant != NULL)
   {
@@ -247,7 +247,7 @@ void lastTurn(GtkWidget *widget, gpointer data)
 void nextTurn(GtkWidget *widget, gpointer data)
 {
   JUEGO *datos = (JUEGO *) data;
-  gboolean canSwitch; //TODO: unused?
+  gboolean canSwitch;
 
   if(datos->actual != NULL && datos->actual->sig != NULL)
   {
@@ -289,5 +289,17 @@ void nextTurn(GtkWidget *widget, gpointer data)
     }
   }
 
+  return;
+}
+
+void assistant_close(GtkWidget *widget, gpointer data)
+{
+  gtk_widget_destroy(widget);
+  return;
+}
+void assistant_destroy(GtkWidget *widget, gpointer data)
+{
+  JUEGO *datos = (JUEGO *) data;
+  gtk_widget_set_sensitive(datos->graficos.window, TRUE);
   return;
 }
