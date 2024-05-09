@@ -1,8 +1,0 @@
-#include "header.h"
-
-
-/**
- *@fn función que revisa en que estado esta el tablero de juego; si contunua, es empate o hay algún ganador
- *@param recive la una cadena de caracteres que tiene la información de que tiene cada posición del tablero
- *@return en caso de que haya un ganador, regresa el símbolo de quien ganó, si es empate regresa 'g' de gato, si no es gato ni hay ganador regresa ' '
- */
