@@ -36,6 +36,7 @@ void nuevaPartida(GtkWidget *widget, gpointer data)
 
   gint res = 0;
   gint sRes = 0;
+  int cont; // no uso i porque es de ultimo minuto y Luis nunca llamaria un contador asi
 
   int s = 0;
 
@@ -190,6 +191,9 @@ void nuevaPartida(GtkWidget *widget, gpointer data)
           if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(newGame.chb)))
           {
             // prepara la partida contra la computadora en modo dificil
+            for (cont = 0; cont < 777; cont++) {
+              g_print("./???.777\n");
+            }
             setNewGame(datos, TRUE, TRUE, plrnms[0], NULL);
           }
           else
