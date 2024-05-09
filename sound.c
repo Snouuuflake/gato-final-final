@@ -5,7 +5,7 @@
  * @return void
  */
 void startMusic() {
-  system("aplay ./MEDIA/hercules.wav");
+  system("aplay ./MEDIA/hercules.wav &");
 }
 
 
