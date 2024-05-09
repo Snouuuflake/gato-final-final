@@ -262,7 +262,7 @@ void displayHardMode(JUEGO *juego)
   // muestra las llamas
   for(i = 0; i < 2; i++)
   {
-    //gtk_widget_show(juego->graficos.flames[i]);
+    gtk_widget_show(juego->graficos.flames[i]);
   }
 
   return;

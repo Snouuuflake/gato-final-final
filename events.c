@@ -485,6 +485,7 @@ void StopTheApp(GtkWidget *window, gpointer data)
     }
   }
 
+  stopMusic();
   // finaliza el bucle de gtk
   gtk_main_quit();
 
