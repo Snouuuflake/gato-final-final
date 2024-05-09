@@ -189,6 +189,7 @@ void StopTheApp(GtkWidget *window, gpointer data)
     }
   }
 
+  stopMusic();
   gtk_main_quit();
 
   return;
