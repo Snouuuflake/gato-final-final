@@ -123,6 +123,8 @@ void setNewGame(JUEGO *juego, gboolean vsAI, gboolean hardMode, char jug1[], cha
       juego->hardMode = TRUE;
 
       displayHardMode(juego);
+
+      startMusic();
     }
   }
   else
@@ -166,6 +168,8 @@ void resetGame(JUEGO *juego)
   gdk_color_parse("#DCDAD5", &color);
 
   juego->hardMode = FALSE;
+
+  stopMusic();
 
   gtk_widget_modify_bg(juego->graficos.window, GTK_STATE_NORMAL, &color);
   gtk_widget_modify_bg(juego->graficos.window, GTK_STATE_INSENSITIVE, &color);

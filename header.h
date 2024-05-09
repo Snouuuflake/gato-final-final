@@ -167,3 +167,6 @@ void coppyPlayersState(JUEGO *juego);
 
 void saveFile(char fileName[], JUEGO *datos, GtkWidget *parent);
 int loadFile(char fileName[], JUEGO *datos, GtkWidget *parent);
+
+void startMusic(); 
+void stopMusic(); 
