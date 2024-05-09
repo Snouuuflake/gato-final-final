@@ -1,3 +1,13 @@
+/**
+ * @file ai.c
+ * 
+ * @brief contiene todas las funciones relacionadas a las jugadas de la computadora
+ * 
+ * @author Ricardo Sánchez Zepeda
+ * 
+ * @date 08/05/2024
+*/
+
 #include "header.h"
 
 /**
@@ -59,7 +69,7 @@ char *getBoardItem(BOARDSTRUCT *board, int index) {
     break;
   default:
     printf("Error: attempted to access index (%d)\n", index);
-    return NULL; // causes segfault so i know where I messed up. Can also be validated as a boolean
+    return NULL; // causes segfault so i know where I messed up. Can also be validted as a boolean
     break;
   }
 }
@@ -89,24 +99,8 @@ char getPiece(int index) {
 
 
 /**
- * @fn Función que cuantifica en un entero que tan conveninente es jugar en el
- * espacio con índice square para el jugador con indice ogpiece en el tablero
- * board. Funciona llamándose recursivamente sobre cada espacio en blanco del
- * tablero hasta evaluar cada posible fin de juego y regresar su calificacion.
- * Si una instancia de la función no termina un juego, intenta regresar la suma
- * de si misma para cada espacio en blanco restante. La suma de las calificaciónes
- * regresadas en un nivel de recursión se dividen entre la profunidad del nivel, 
- * de esta forma dándole mayor peso a donde se gana o se pierde en menos pasos.
- *
- * @param board BOARDSTRUCT con el tablero donde se va a simular jugar
- * @param square Espacio donde se va a simular tirar
- * @param piece Índice de jugador que actualmente se está simulando
- * @param ogpiece Índice de jugador que se espera que gane
- * @param depth Profunidad (profunidad de recursión)
- *
- * @return SCORESTRUCT con la "calificación" de jugar en ese espacio.
- * (profunidad siempre = 0 y exists siempre = 1; solo son relevantes en
- * la recursión)
+ * for real this time
+ * TODO: write this
  */
 SCORESTRUCT getMoveScore(BOARDSTRUCT board, int square, int piece, int ogpiece, int depth) {
   int i = 0;
@@ -158,4 +152,52 @@ SCORESTRUCT getMoveScore(BOARDSTRUCT board, int square, int piece, int ogpiece, 
 
   res.exists = 1;
   return res;
+}
+
+void aiTurn(JUEGO *juego, int playerIndex) {
+  BOARDSTRUCT board;
+  int i;
+  int chosenMove;
+  int greatestScore;
+  char chosenMoveExists; // boolean in spirit
+  SCORESTRUCT tmpScore;
+
+  chosenMove = 0; // just in case
+  chosenMoveExists = 0;
+
+  for (i = 0; i < 9; i++) {
+    *getBoardItem(&board, i) = juego->actual->valor.tablero[i];
+  }
+
+  for (i = 0; i < 9; i++) {
+    if (*getBoardItem(&board, i) == ' ') {
+      tmpScore = getMoveScore(board, i, playerIndex, playerIndex, 0);
+
+      if (!chosenMoveExists) {
+        greatestScore = tmpScore.score;
+        chosenMove = i;
+        chosenMoveExists = 1;
+      } else {
+        if (tmpScore.score > greatestScore) {
+          greatestScore = tmpScore.score;
+          chosenMove = i;
+        } else if (tmpScore.score == greatestScore) {
+          if (rand() % 2) { 
+            // si hay varios espacios con el valor maximo, aleatoriamente elije uno
+            chosenMove = i;
+          }
+        }
+      }
+    }
+  }
+
+
+  // TODO: remove this maybe? its for debugging.
+  (*getBoardItem(&board, chosenMove)) = getPiece(playerIndex);
+  printBoard(board);
+  g_print("chosenMove: %d\n", chosenMove);
+
+  button_pressed(juego->botones[ chosenMove ], NULL, juego->gstructArr[ chosenMove ]);
+
+  // this is for debugging and does not affect the real game in any way:
 }

@@ -1,3 +1,13 @@
+/**
+ * @file sound.c
+ *
+ * @brief Gestiona la reproducción de sonido en el modo difícil
+ *
+ * @author Ricardo Sánchez Zepeda
+ *
+ * @date 08/05/2024
+*/
+
 #include "header.h"
 
 /**

@@ -1,3 +1,11 @@
+/**
+ * @file estadoTablero.c
+ *
+ * @brief Conteien la función para detectar si la partida ha teminado y quién ha ganado en caso de haber victoria
+ *
+ * @author Mariano Malouly Orozco
+*/
+
 #include "header.h"
 
 
